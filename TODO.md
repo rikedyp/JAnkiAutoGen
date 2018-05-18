@@ -17,9 +17,5 @@ There may be todos inside any .py or .kv files
 ### Licensing
 - Determine which license / notice files need to be included in the project (e.g. MIT)
 	- python
-	- kivy
-	- sqlite3
-	- pygame
-- Credit Derek Banas Kivy tutorial 5
-- Make sure to go find and credit other people who's code you stole
-- Calendar button / widget calendar_ui, calendar_data
+	- MeCab
+  - Qt / PyQt

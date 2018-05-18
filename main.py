@@ -5,58 +5,43 @@
 # Input Japanese text and get back a massive set of cloze deletion problems
 # Eventually: Get back an anki deck you can import
 
-
+# TODO:
+# generate cloze from text e.g.
+# APIの変更に互換性のない場合はメジャーバージョンを
+# =>
+# API の 変更 に 互換性 の ない 場合 は メジャー バージョン を
+# APIの{cloze::変更}{furigana::へんこう}に互換性のない場合はメジャーバージョンを
+# + for all other non-particle words initially?
+# Don't repeat for multiple instances of same word
+# Add optional furigana
 import MeCab
+from sqlconnect import JASQL as sql
+import uuid
 import sys
-import string
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.filechooser import FileChooserListView
-from kivy.lang import Builder
-
-Builder.load_string('''
-<Home>:
-	on_parent: root.init()
-	orientation: 'vertical'
-	FileChooserListView:
-		id: filechooser
-		show_hidden: True
-	Button:
-		font_name:"DroidSansJapanese.ttf"
-		text: "load file"
-		on_press: root.load_file()
-	TextInput:
-		id: textinput
-		font_name:"DroidSansJapanese.ttf"
-		size_hint_y: 0.9
-	BoxLayout:
-		orientation: 'horizontal'
-		Button:
-			size_hint_y: 0.1
-			text: "Create cloze"
-			on_press: root.start()
-	''')
-
-class Home(BoxLayout):
-	mc = MeCab.Tagger("-Owakati")
-	text = "太郎はこの本を読んだ。"
-	def init(self):
-		# use this instead of faffing around with super
-		self.ids.textinput.text = self.text
-	def load_file(self, filechooser):
-		self.load(filechooser.path, filechooser.selection)
-	def load(self, path, selection):
-		print(path, selection)
-	def start(self):
-		file = open("sentence.txt")
-		print(file)
-	def reset(self):
-		self.ids.textinput.text = self.text
-
-class AKCGApp(App):
-	def build(self):
-		return Home()
 
 if __name__ == "__main__":
-	print("Starting AJCG")
-	AKCGApp().run()
+
+    # --- Get text from file
+
+    with open('sentence.txt', 'r') as file:
+        data = file.read().replace('\n', '')
+    t = MeCab.Tagger("-Owakati")
+    s = t.parse(data)
+    wordlist = s.split(" ")
+    wordlist.remove("\n")
+    #wordlist = set(wordlist)
+    # print(data)
+    # print(s)
+    # print(wordlist)
+    for word in wordlist:
+        printstring = "*"+word+"*"
+        print(printstring)
+
+    # --- Commit to sqlite3 database
+    # Connect to file in same folder
+    db = sqlite3.connect('testDeck.anki2')
+    # Get cursor
+    cursor = db.cursor()
+    # Execute sample code
+    db.close()
+    sql()
