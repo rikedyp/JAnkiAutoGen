@@ -109,12 +109,11 @@ if __name__ == "__main__":
     # TODO Choose a text file when you run it:
     #   $python main.py filename.txt
     #   Eventually: $JAnkiAutogen infile.txt outfile.apkg
-    sentence, wordlist = load_text('見せかけのラブソング') # os.path | argument in terminal | look for default filename?
+    sentence, wordlist = load_text('input.txt') # os.path | argument in terminal | look for default filename?
     #sentence = unicode(sentence, 'utf-8')
     # --- Turn text into clozes for printing to screen
     clozes = rejig_text(sentence, wordlist)
-    for cloze in clozes:
-        print(cloze)
+    print(sentence)
     # put html <br /> line breaks for Anki
     sentence = sentence.replace('\n', '<br />')
     clozes = rejig_text(sentence, wordlist)

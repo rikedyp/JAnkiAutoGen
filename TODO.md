@@ -14,6 +14,12 @@ There may be todos inside any .py or .kv files
 - [Licensing](#licensing)
 
 ### General
+- Consider using Github stuff instead of big long TODO files?
+- Test how to break this:
+	- English / non japanese text?
+
+- ISSUE: Seem to be getting duplicate cards sometimes
+- Consider using included font (check licensing / permissions)
 - 1.0 Have a file selection function
 - 1.0 Test what happens if you:
 	- Create a new deck new name
@@ -22,10 +28,13 @@ There may be todos inside any .py or .kv files
 		- Are new notes just added to first deck again or does guid matter?
 - Put setup instructions into README
 	- 1.0 Make sure setup instructions are comprehensive
+		- I think genanki was modified
 - 1.0 Error catching!
 - 1.0 Optional Auto-Furigana
-	- Get furigana from MeCab
+	- Get furigana from MeCab (check mepytest.py)
 	- Incorporate to anki decks (test python-generated anki decks for furigana (how does Anki do it?))
+- Consider beautifying flash cards  
+	https://www.reddit.com/r/LearnJapanese/comments/37ddh7/any_way_to_make_flashcard_fonts_bigger_in_anki/
 
 ### CLI
 In built command line interface for python
