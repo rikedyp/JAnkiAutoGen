@@ -9,22 +9,30 @@ There may be todos inside any .py or .kv files
 
 ### CONTENTS
 - [General](#general)
+- [CLI](#cli)
 - [GUI](#gui)
 - [Licensing](#licensing)
 
 ### General
-- Generate anki deck / notes from japanese text in separate file
-	- Have a file selection function
-- Be able to update existing decks with new cards? 
-	- OR better to generate new deck per chunk (e.g. 1 deck for 1 set of song lyrics, or 1 deck per paragraph from large text?
-	should ideally be quite customisable)
-	- Are people going to want to paste a whole book in here? (doesn't seem wise to allow too large text)
+- 1.0 Have a file selection function
+- 1.0 Test what happens if you:
+	- Create a new deck new name
+	- Create second deck second name
+	- Run the program with first deck file name
+		- Are new notes just added to first deck again or does guid matter?
 - Put setup instructions into README
-	- Make sure setup instructions are comprehensive
-- Error catching!
-- Optional Auto-Furigana
+	- 1.0 Make sure setup instructions are comprehensive
+- 1.0 Error catching!
+- 1.0 Optional Auto-Furigana
 	- Get furigana from MeCab
 	- Incorporate to anki decks (test python-generated anki decks for furigana (how does Anki do it?))
+
+### CLI
+In built command line interface for python
+	- Paste text?
+	- Choose a file?
+	- What's the point?
+- Put it in the docs
 
 ### GUI
 - Create GUI in PyQt (kivy has IME input issues) OR Tkinter

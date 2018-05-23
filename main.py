@@ -36,18 +36,18 @@ def get_id():
     newid = random.randrange(1 << 30, 1 << 31)
     return newid
 
-def create_note(word, sentence, model):
+def create_note(cloze, sentence, model):
     # TODO: sentence -> paragraph / wholetext
     note = genanki.Note(
         model=model,
-        fields=['This sentence is a [...] deletion', 'This sentence is a <b>cloze</b> deletion'],
+        fields=[cloze, sentence],
         sort_field = '',
         tags = None,
         guid = random.randrange(1 << 30, 1 << 31),
         )
     return note
 
-def create_deck(sentence, wordlist, deckfile = 'JAnkiAutogen_Output.apkg', setname = "Default Deck"):
+def create_deck(clozes, sentence, deckfile = 'JAnkiAutogen_Output.apkg', setname = "Default Deck"):
     # Create anki deck from words / text block
     # TODO: Can we retrieve / load an existing deck / deck ID?
             # Need to pass sentence
@@ -70,18 +70,22 @@ def create_deck(sentence, wordlist, deckfile = 'JAnkiAutogen_Output.apkg', setna
             }]
     )
     # Generate notes (flashcards)
-    for word in wordlist:
-        note = create_note(word, sentence, model)
-        #deck.add_note(note)
-    deck.add_note(note)
+    for cloze in clozes:
+        clozenote = create_note(cloze, sentence, model)
+        deck.add_note(clozenote)
+    #deck.add_note(note)
 
     genanki.Package(deck).write_to_file(deckfile)
 
 def load_text(textfile):
     with open(textfile, "r") as file:
-        text = file.read().replace("\n", " ") # Might need modifying for paragraphs / documents
+        text = file.read()#.replace("\n", " ") # Might need modifying for paragraphs / documents
+        #text = unicode(text, 'utf-8')
     t = MeCab.Tagger("-Owakati")
     s = t.parse(text)
+    # Convert to unicode
+    s = unicode(s, 'utf-8')
+    text = unicode(text, 'utf-8')
     wordlist = s.split(" ")
     wordlist.remove("\n")
     # TODO: Remove punctuation e.g. "。"
@@ -89,23 +93,31 @@ def load_text(textfile):
     return text, wordlist
 
 def rejig_text(sentence, wordlist):
-    sentences = []
+    #print(wordlist)
+    clozes = []
     #print(sentence)
     for word in wordlist:
         cloze = re.sub(word, '[...]', sentence)
-        print(cloze)
-    # wordlist = text.split(" ")
-    # print(wordlist)
-    # wordlist = set(wordlist)
-    # for word in wordlist:
-    #     print(word)
-    #     cloze = re.sub(r'\b'+word+r'\b', '[...]', text)
-    #     sentences.append(cloze)
-    # return sentences
+        #cloze = cloze.decode('utf-8')
+        clozes.append(cloze)
+    return clozes
 
 if __name__ == "__main__":
 
+    # IDEA: Return GUID on first run which user can hard-code in / save per deck in a library?
     # --- Get text from file
-    sentence, wordlist = load_text('sentence.txt') # os.path | argument in terminal | look for default filename?
-    sentences = rejig_text(sentence, wordlist)
-    #print(sentences)
+    # TODO Choose a text file when you run it:
+    #   $python main.py filename.txt
+    #   Eventually: $JAnkiAutogen infile.txt outfile.apkg
+    sentence, wordlist = load_text('見せかけのラブソング') # os.path | argument in terminal | look for default filename?
+    #sentence = unicode(sentence, 'utf-8')
+    # --- Turn text into clozes for printing to screen
+    clozes = rejig_text(sentence, wordlist)
+    for cloze in clozes:
+        print(cloze)
+    # put html <br /> line breaks for Anki
+    sentence = sentence.replace('\n', '<br />')
+    clozes = rejig_text(sentence, wordlist)
+    # Create anki deck from cloze deletions
+    create_deck(clozes, sentence, 'TestDeck.apkg', 'JAA Test Deck')
+    print("Deck built.")
