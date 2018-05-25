@@ -14,6 +14,8 @@ There may be todos inside any .py or .kv files
 - [Licensing](#licensing)
 
 ### General
+- 1.0 Make linux / windows / (mac maybe) executables
+- 1.0 .deb installer
 - 1.0 Consistent use of "", ''
 - 1.0 Fix duplicates for compound words e.g. 歌詞 / 歌 (kashi / uta)
 - Consider using Github stuff instead of big long TODO files?
