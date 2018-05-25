@@ -18,13 +18,16 @@ The Automatic Japanese Anki Cloze Generator will do what it says on the tin.
 Quickstart:  
  - Install dependencies:
  	- python 2.7 or try 3?
- 	- pyton-mecab  
- 		https://github.com/SamuraiT/mecab-python3
- 	- python-genanki  
+ 	- python mecab  
+ 		https://github.com/SamuraiT/mecab-python3  
+ 		pip install --user mecab-python3  
+ 	- python genanki  
  		https://github.com/kerrickstaley/genanki
+ 	- python jaconv (not sure about python 2.7)
+ 		pip install --user jaconv
  - Clone or download this repo
  - cd JAnkiAutogen/
- - python main.py  
+ - ./JAnkiAutogen.py
  	Converts Japanese text in input.txt into cloze deletion flash cards and outputs TestDeck.apkg  
   
  Current Anki version: 2.0.50

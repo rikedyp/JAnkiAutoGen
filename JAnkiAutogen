@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-### JAnkiAutogen: Automatic Japanese cloze generator
+### Automatic japanese cloze generator
 # Input Japanese text and get back a massive set of cloze deletion problems
 # Eventually: Get back an anki deck you can import
 
@@ -74,7 +74,7 @@ def create_deck(clozes, sentence, furigana = False, deckfile = 'JAnkiAutogen_Out
             deck.add_note(clozenote)
             notecount += 1
     genanki.Package(deck).write_to_file(deckfile)
-    print("Deck built: "+str(notecount)+" notes.")
+    print("Deck built: "+deckfile+", "+str(notecount)+" notes.")
 
 def load_text(textfile):
     with open(textfile, "r") as file:
@@ -83,6 +83,8 @@ def load_text(textfile):
     s = t.parse(text)
     wordlist = s.split(" ")
     wordlist.remove("\n")
+    # put html <br /> line breaks for Anki
+    text = text.replace('\n', '<br />')
     # TODO: Remove punctuation e.g. "。"
     return text, wordlist
 
@@ -115,22 +117,29 @@ def furiganify(sentence, wordlist):
 
 if __name__ == "__main__":
 
-    # --- Get text from file
-    # TODO Choose a text file when you run it:
-    #   $python main.py filename.txt
-    #   Eventually: $JAnkiAutogen infile.txt outfile.apkg 'Deck Title'
-    sentence, wordlist = load_text('input.txt') # os.path | argument in terminal | look for default filename?
-    #sentence, wordlist = load_text(" ".join(sys.argv))
+    # $JAnkiAutogen infile outfile.apkg "Deck Title"
+    if len(sys.argv) > 1:
+        print(sys.argv)
+        sentence, wordlist = load_text("".join(sys.argv[1]))
+    else:
+        print("No args")
+        sentence, wordlist = load_text('input.txt') # os.path | argument in terminal | look for default filename?
     # --- Turn text into clozes for printing to screen
-    # put html <br /> line breaks for Anki
-    sentence = sentence.replace('\n', '<br />')
-    #clozes = make_clozes(sentence, wordlist)
-
+    # TODO: 1.0 Keep or ditch: 
+    #clozes = make_clozes(sentence, wordlist) # No furigana (but does more words?) 
     clozes, sentences = furiganify(sentence, wordlist)
-    for cloze in clozes:
-        print(cloze)
     # --- Create anki deck from cloze deletions
     # no furigana
     #create_deck(clozes, sentence, False, 'TestDeck.apkg', 'JAA Test Deck')
     # with furigana
-    create_deck(clozes, None, True, 'TestDeck.apkg', 'JAA Test Deck')
+    if len(sys.argv) > 2:
+        if len(sys.argv) > 3:
+            create_deck(clozes, None, True, "".join(sys.argv[2]), "".join(sys.argv[3]))
+        else:
+            create_deck(clozes, None, True, "".join(sys.argv[2]), "JAA Deck")
+    else:
+        create_deck(clozes, None, True, 'TestDeck.apkg', 'JAA Test Deck')
+    #sentence = "その書き方はまだよく分かっていない！　この文はどう分かれる？"
+    #print(re.fullmatch(r'[u4e00-\u9fea]+', sentence))
+
+    

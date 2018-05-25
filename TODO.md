@@ -14,12 +14,16 @@ There may be todos inside any .py or .kv files
 - [Licensing](#licensing)
 
 ### General
+- 1.0 Consistent use of "", ''
+- 1.0 Fix duplicates for compound words e.g. 歌詞 / 歌 (kashi / uta)
 - Consider using Github stuff instead of big long TODO files?
-- Test how to break this:
-	- English / non japanese text?
-
-- ISSUE: Seem to be getting duplicate cards sometimes
-- Consider using included font (check licensing / permissions)
+- 1.0 Implement options  
+	- Kanji words only
+	- Nouns only
+	- Furigana on/off)
+- 1.0 Think of ways to try and break it 
+	- Non japanese text - 
+	- Correct Unicode range?
 - 1.0 Have a file selection function
 - 1.0 Test what happens if you:
 	- Create a new deck new name
@@ -29,12 +33,6 @@ There may be todos inside any .py or .kv files
 - Put setup instructions into README
 	- 1.0 Make sure setup instructions are comprehensive
 		- I think genanki was modified
-- 1.0 Error catching!
-- 1.0 Optional Auto-Furigana
-	- Get furigana from MeCab (check mepytest.py)
-	- Incorporate to anki decks (test python-generated anki decks for furigana (how does Anki do it?))
-- Consider beautifying flash cards  
-	https://www.reddit.com/r/LearnJapanese/comments/37ddh7/any_way_to_make_flashcard_fonts_bigger_in_anki/
 
 ### CLI
 In built command line interface for python
