@@ -80,18 +80,24 @@ def load_text(textfile):
     with open(textfile, "r") as file:
         text = file.read()
     t = MeCab.Tagger("-Owakati")
+    
     s = t.parse(text)
     wordlist = s.split(" ")
     wordlist.remove("\n")
+    wordset = set(wordlist)
     # put html <br /> line breaks for Anki
     text = text.replace('\n', '<br />')
+    s = t.parse(text)
+    s = s.replace('< br />', "<br />")
     # TODO: Remove punctuation e.g. "。"
-    return text, wordlist
+    return s, wordset
 
 def make_clozes(sentence, wordlist):
     clozes = []
     for word in wordlist:
-        cloze = re.sub(word, '「...」', sentence)
+        cloze = re.sub(r'\b'+word+r'\b', '「...」', sentence)
+        cloze = re.sub(" ", "", cloze)
+        cloze = cloze.replace("<br/>", "<br />")
         clozes.append(cloze)
     return clozes
 
@@ -103,10 +109,23 @@ def furiganify(sentence, wordlist):
     nonkanji = []
     for word in wordlist:
         if re.findall(r'[\u4e00-\u9fea]+',word):
+            print(word)
             w = t.parse(word)
             w = re.sub(r'\n', '', w)
             w = jaconv.kata2hira(w)
-            furi_sentence = re.sub(word, " "+word+'['+w+']', sentence)
+            #sentence = re.sub(" ", "", sentence)
+            furi_sentence = re.sub(r'\b'+word+" "+r'\b', " "+word+'['+w+']', sentence)
+            furi_sentence = re.sub(r'\b'+" "+r'\b', "", furi_sentence)
+            #furi_sentence = re.sub("   "+word+'['+w+']  ', word+'['+w+']', furi_sentence)
+            punctuation_list = ["。", "？", "！"]
+            for item in punctuation_list:
+                furi_sentence = re.sub(" "+item, item, furi_sentence)
+            furi_sentence = re.sub("  ", " ", furi_sentence)
+            # furi_sentence = re.sub(" 。", "。", furi_sentence)
+            # furi_sentence = re.sub(" ？", "？", furi_sentence)
+            # furi_sentence = re.sub(" ？", "？", furi_sentence)
+            #furi_sentence.replace(" ？", "？")
+            #furi_sentence = re.sub(w, w)
             sentences.append(furi_sentence)
         else:
             nonkanji.append(word)
@@ -128,10 +147,15 @@ if __name__ == "__main__":
     # TODO: 1.0 Keep or ditch: 
     #clozes = make_clozes(sentence, wordlist) # No furigana (but does more words?) 
     clozes, sentences = furiganify(sentence, wordlist)
+    for cloze in clozes:
+        print(cloze)
+    for sentence in sentences:
+        print(sentence)
     # --- Create anki deck from cloze deletions
     # no furigana
     #create_deck(clozes, sentence, False, 'TestDeck.apkg', 'JAA Test Deck')
     # with furigana
+    
     if len(sys.argv) > 2:
         if len(sys.argv) > 3:
             create_deck(clozes, None, True, "".join(sys.argv[2]), "".join(sys.argv[3]))
@@ -139,7 +163,6 @@ if __name__ == "__main__":
             create_deck(clozes, None, True, "".join(sys.argv[2]), "JAA Deck")
     else:
         create_deck(clozes, None, True, 'TestDeck.apkg', 'JAA Test Deck')
+    
     #sentence = "その書き方はまだよく分かっていない！　この文はどう分かれる？"
     #print(re.fullmatch(r'[u4e00-\u9fea]+', sentence))
-
-    
